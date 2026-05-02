@@ -154,7 +154,7 @@ Always respond in this exact JSON format with no markdown, no backticks, no extr
   const userPrompt = `Today's topic: ${topic.name}\n\n${topic.prompt}\n\nJSON only. No markdown. No backticks.`;
 
   const requestBody = {
-    model: "claude-haiku-4-5-20241022",
+    model: "claude-haiku-4-5-20251001",
     max_tokens: 500,
     system: systemPrompt,
     messages: [{ role: "user", content: userPrompt }],
