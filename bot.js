@@ -153,6 +153,16 @@ Always respond in this exact JSON format with no markdown, no backticks, no extr
 
   const userPrompt = `Today's topic: ${topic.name}\n\n${topic.prompt}\n\nJSON only. No markdown. No backticks.`;
 
+  const requestBody = {
+    model: "claude-3-5-haiku-20241022",
+    max_tokens: 500,
+    system: systemPrompt,
+    messages: [{ role: "user", content: userPrompt }],
+  };
+
+  console.log("[QOTD] API Key starts with:", ANTHROPIC_API_KEY ? ANTHROPIC_API_KEY.substring(0, 12) : "MISSING");
+  console.log("[QOTD] Request body model:", requestBody.model);
+
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -160,12 +170,7 @@ Always respond in this exact JSON format with no markdown, no backticks, no extr
       "x-api-key": ANTHROPIC_API_KEY,
       "anthropic-version": "2023-06-01",
     },
-    body: JSON.stringify({
-      model: "claude-3-5-haiku-20241022",
-      max_tokens: 500,
-      system: systemPrompt,
-      messages: [{ role: "user", content: userPrompt }],
-    }),
+    body: JSON.stringify(requestBody),
   });
 
   const data = await response.json();
