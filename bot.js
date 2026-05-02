@@ -214,7 +214,7 @@ async function sendToChannel(channelConfig, channelIndex) {
       .setFooter({ text: `The Forge  •  ${today}` })
       .setTimestamp();
 
-    await channel.send({ content: `@everyone`, embeds: [embed] });
+    await channel.send({ content: `<@&1474272207667593268>`, embeds: [embed] });
     console.log(`[QOTD] ✅ Sent to ${channelConfig.name}`);
   } catch (err) {
     console.error(`[QOTD] Error on ${channelConfig.name}:`, err);
