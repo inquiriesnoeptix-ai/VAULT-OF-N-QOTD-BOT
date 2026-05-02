@@ -154,7 +154,7 @@ Always respond in this exact JSON format with no markdown, no backticks, no extr
   const userPrompt = `Today's topic: ${topic.name}\n\n${topic.prompt}\n\nJSON only. No markdown. No backticks.`;
 
   const requestBody = {
-    model: "claude-3-5-haiku-20241022",
+    model: "claude-haiku-4-5-20241022",
     max_tokens: 500,
     system: systemPrompt,
     messages: [{ role: "user", content: userPrompt }],
@@ -168,7 +168,7 @@ Always respond in this exact JSON format with no markdown, no backticks, no extr
     headers: {
       "Content-Type": "application/json",
       "x-api-key": ANTHROPIC_API_KEY,
-      "anthropic-version": "2024-10-22",
+      ""anthropic-version": "2023-06-01",
     },
     body: JSON.stringify(requestBody),
   });
