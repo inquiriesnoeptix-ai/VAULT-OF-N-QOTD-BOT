@@ -169,7 +169,15 @@ Always respond in this exact JSON format with no markdown, no backticks, no extr
   });
 
   const data = await response.json();
-  const text = data.content[0].text.trim();
+  
+  if (!data.content || !data.content[0] || !data.content[0].text) {
+    console.error("[QOTD] Bad API response:", JSON.stringify(data));
+    throw new Error("Invalid API response structure");
+  }
+  
+  let text = data.content[0].text.trim();
+  // Strip any markdown backticks if present
+  text = text.replace(/```json|```/g, "").trim();
   return JSON.parse(text);
 }
 
