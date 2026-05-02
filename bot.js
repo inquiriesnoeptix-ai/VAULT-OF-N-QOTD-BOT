@@ -168,7 +168,7 @@ Always respond in this exact JSON format with no markdown, no backticks, no extr
     headers: {
       "Content-Type": "application/json",
       "x-api-key": ANTHROPIC_API_KEY,
-      ""anthropic-version": "2023-06-01",
+      "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify(requestBody),
   });
