@@ -7,16 +7,54 @@ const POST_HOUR = 9;
 const POST_MINUTE = 0;
 const GROWTH_CHANNEL_ID = "1386620798717919345";
 
-// ─── TOPICS (randomised each day) ────────────────────────────────────────────
+// ─── 21 TOPICS ────────────────────────────────────────────────────────────────
 const ALL_TOPICS = [
-  { name: "Identity", emoji: "🔥", color: 0xc8a96e, prompt: "Generate one single confrontational discussion question about identity — the gap between who a man performs versus who he actually is. No quote. No context. Just one sharp question that makes men think." },
-  { name: "Discipline", emoji: "🏛️", color: 0x2c3e50, prompt: "Generate one single confrontational discussion question about discipline and showing up daily. No quote. No context. Just one sharp question that exposes whether a man is actually doing the work." },
-  { name: "Stoicism", emoji: "⚔️", color: 0x8e44ad, prompt: "Generate one single discussion question rooted in stoic philosophy applied to modern life. No quote. No context. Just one sharp question." },
-  { name: "Money & Execution", emoji: "💰", color: 0x1e8449, prompt: "Generate one single confrontational discussion question about money, building income, and execution in 2024-2025. No quote. No context. Just one sharp question." },
-  { name: "This Generation", emoji: "⚡", color: 0xe74c3c, prompt: "Generate one single confrontational discussion question about men in this generation — the comfort trap, distraction, and what separates those who build from those who watch. No quote. No context. Just one sharp question." },
-  { name: "Psychology", emoji: "🧠", color: 0x6c3483, prompt: "Generate one single discussion question about self-deception, behavioural patterns, or the mental blocks that keep men stuck. No quote. No context. Just one sharp question." },
-  { name: "Legacy & Purpose", emoji: "💀", color: 0x2d2d2d, prompt: "Generate one single confrontational discussion question about legacy, purpose, and what a man is actually building with his life. No quote. No context. Just one sharp question." },
+  { name: "Identity Gap", emoji: "🔥", color: 0xc8a96e, prompt: "Generate one confrontational question about the gap between who a man claims to be and who he actually is when no one is watching." },
+  { name: "Self-Deception", emoji: "🧠", color: 0x6c3483, prompt: "Generate one confrontational question about how men lie to themselves to stay comfortable and avoid real change." },
+  { name: "Discipline vs Motivation", emoji: "🏛️", color: 0x2c3e50, prompt: "Generate one confrontational question about why men rely on motivation instead of building systems that force them to show up." },
+  { name: "The Comfort Trap", emoji: "⚡", color: 0xe74c3c, prompt: "Generate one confrontational question about how comfort is quietly destroying a man's potential without him realising it." },
+  { name: "Stoicism in Real Life", emoji: "⚔️", color: 0x8e44ad, prompt: "Generate one question applying stoic philosophy to a real situation modern men face — not academic, not a quote. Practical and sharp." },
+  { name: "Money & Identity", emoji: "💰", color: 0x1e8449, prompt: "Generate one confrontational question about how a man's identity and self-worth are connected to his relationship with money and why most men stay broke." },
+  { name: "Building vs Watching", emoji: "📈", color: 0x27ae60, prompt: "Generate one confrontational question about the difference between men who are actively building something and men who are consuming content about building." },
+  { name: "Legacy", emoji: "💀", color: 0x2d2d2d, prompt: "Generate one confrontational question about what a man is actually leaving behind — not what he says he wants to leave, but what his daily actions are building toward." },
+  { name: "The Mirror Test", emoji: "🪞", color: 0x95a5a6, prompt: "Generate one question that forces a man to be brutally honest with himself about one specific area of his life he has been avoiding." },
+  { name: "Execution", emoji: "⚙️", color: 0x7f8c8d, prompt: "Generate one confrontational question about the gap between knowing what to do and actually doing it — and what that gap reveals about a man." },
+  { name: "This Generation", emoji: "📱", color: 0xd35400, prompt: "Generate one confrontational question about how men in this generation are being softened, distracted, and outcompeted without realising it." },
+  { name: "AI & The Future", emoji: "🤖", color: 0x2980b9, prompt: "Generate one sharp question about what AI and the new economy mean for men who are not paying attention right now." },
+  { name: "Relationships & Standards", emoji: "🤝", color: 0x8e44ad, prompt: "Generate one confrontational question about the standards a man holds in his relationships — friendships, romantic, professional — and what those standards say about him." },
+  { name: "Fear & Avoidance", emoji: "😶", color: 0x34495e, prompt: "Generate one confrontational question about what a man is avoiding in his life and what that avoidance is costing him." },
+  { name: "Physical Standard", emoji: "💪", color: 0xe74c3c, prompt: "Generate one sharp question about a man's physical standard — not aesthetics, but what his relationship with his body says about his relationship with discipline." },
+  { name: "Mental Toughness", emoji: "🥊", color: 0xc0392b, prompt: "Generate one confrontational question about mental toughness — what it actually looks like versus what men tell themselves it looks like." },
+  { name: "Purpose & Direction", emoji: "🧭", color: 0x16a085, prompt: "Generate one confrontational question about whether a man actually knows where he is going and whether his daily actions prove it." },
+  { name: "Ego & Growth", emoji: "👁️", color: 0xf39c12, prompt: "Generate one confrontational question about how a man's ego is blocking his growth — specifically the ways he refuses to admit he is wrong or needs to change." },
+  { name: "Consistency", emoji: "📅", color: 0x1abc9c, prompt: "Generate one confrontational question about consistency — not the idea of it, but the specific place where a man always falls off and what that pattern reveals." },
+  { name: "Time & Priority", emoji: "⏱️", color: 0xe67e22, prompt: "Generate one sharp question about how a man spends his time and whether those choices match what he claims to value." },
+  { name: "Existentialism", emoji: "🌑", color: 0x1a1a2e, prompt: "Generate one existentialist question about radical personal responsibility — the idea that a man's life is entirely a result of his choices and what that means for where he is right now." },
 ];
+
+// ─── ROTATION TRACKER ─────────────────────────────────────────────────────────
+// Tracks which topics have been used in the current cycle
+let usedTopicIndexes = [];
+
+function getNextTopic() {
+  // If all topics used, reset the cycle
+  if (usedTopicIndexes.length >= ALL_TOPICS.length) {
+    console.log("[BOT] All topics used — resetting cycle");
+    usedTopicIndexes = [];
+  }
+
+  // Get unused topics
+  const unusedIndexes = ALL_TOPICS
+    .map((_, i) => i)
+    .filter((i) => !usedTopicIndexes.includes(i));
+
+  // Pick random unused topic
+  const randomIndex = unusedIndexes[Math.floor(Math.random() * unusedIndexes.length)];
+  usedTopicIndexes.push(randomIndex);
+
+  console.log(`[BOT] Topic selected: ${ALL_TOPICS[randomIndex].name} (${usedTopicIndexes.length}/${ALL_TOPICS.length} used this cycle)`);
+  return ALL_TOPICS[randomIndex];
+}
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -33,8 +71,8 @@ async function generateQuestion(topic) {
       model: "claude-haiku-4-5-20251001",
       max_tokens: 200,
       system: `You are writing for a high-standards men's community called The Forge.
-Tone: confrontational, direct, psychological. No motivation. No fluff.
-Respond with ONLY the question. No preamble. No explanation. Just the question itself.`,
+Tone: confrontational, direct, psychological. No motivation. No fluff. No therapy speak.
+Respond with ONLY the question. No preamble. No explanation. No quotation marks. Just the raw question.`,
       messages: [{ role: "user", content: topic.prompt }],
     }),
   });
@@ -52,7 +90,7 @@ Respond with ONLY the question. No preamble. No explanation. Just the question i
 // ─── SEND DAILY QUESTION ──────────────────────────────────────────────────────
 async function sendDailyQuestion() {
   try {
-    const topic = ALL_TOPICS[Math.floor(Math.random() * ALL_TOPICS.length)];
+    const topic = getNextTopic();
     console.log(`[BOT] Generating question — Topic: ${topic.name}`);
 
     const question = await generateQuestion(topic);
